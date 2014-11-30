@@ -8,19 +8,18 @@
 Hemicube::Hemicube(){
 	//need to put this cube into a list.
 }
-void Hemicube::crossProduct(Position3 a, Position3 b,Position3 c){
+void Hemicube::crossProduct(Position3 a, Position3 b, Position3 &c){
 	//c always needs to be up. Hence, b X a.
 	c.pos[0] = b.pos[1] * a.pos[2] - b.pos[2] * a.pos[1];
 	c.pos[1] = -(b.pos[0] * a.pos[2] - b.pos[2] * a.pos[0]);
 	c.pos[2] = b.pos[0] * a.pos[1] - b.pos[1] * a.pos[0];
 }
-void Hemicube::normalize(Position3 a){
+void Hemicube::normalize(Position3 &a){
 	//c always needs to be up. Hence, b X a.
-	Position3 tempa;
-	tempa = a;
+	float k = 1 / sqrtf(a.pos[0] * a.pos[0] +
+		a.pos[1] * a.pos[1] + a.pos[2] * a.pos[2]);
 	for (int i = 0; i < 3; i++){
-		a.pos[i] = tempa.pos[i] / sqrtf(tempa.pos[0] * tempa.pos[0] +
-			tempa.pos[1] * tempa.pos[1] + tempa.pos[2] * tempa.pos[2]);
+		a.pos[i] = a.pos[i] * k;
 	}
 		
 }
