@@ -19,7 +19,7 @@ void Hemicube::normalize(Position3 a){
 	Position3 tempa;
 	tempa = a;
 	for (int i = 0; i < 3; i++){
-		a.pos[i] = a.pos[i] / (tempa.pos[0] * tempa.pos[0] +
+		a.pos[i] = tempa.pos[i] / sqrtf(tempa.pos[0] * tempa.pos[0] +
 			tempa.pos[1] * tempa.pos[1] + tempa.pos[2] * tempa.pos[2]);
 	}
 		
