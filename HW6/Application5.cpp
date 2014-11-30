@@ -20,15 +20,21 @@
 #include <fstream>
 #include <math.h>
 
+
 using namespace std;
 ////////////////
 /////////////////////
-#include "Position3.h"
+
 #include <array>
 #include <string>
 #include <vector>
 #include <algorithm>
 /////////////////////
+//hemicube, removed position3.h since it is included in hemicube.h
+#include "Hemicube.h"
+
+
+
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -473,7 +479,19 @@ for(i=0;i<myOBJ.getNumOfFaces();i=i+2)
 }
 
 /////**************//////
-
+//Constructing Hemicube
+//calculate central point at each patch first
+vector<vector<Hemicube>> hemicubes;
+for (int i = 0; i < wallList.size(); i++){
+	vector<Hemicube> tempHemicubes;
+	for (int j = 0; j < wallList.at(i).size(); j++){
+		Hemicube h;
+		h.setHemicube(wallList.at(i).at(j),2);
+		tempHemicubes.push_back(h);
+	}
+	hemicubes.push_back(tempHemicubes);
+}
+/////**************//////
 ///////////////////////
 	// I/O File open
 	FILE *infile;
