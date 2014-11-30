@@ -97,6 +97,18 @@ void Hemicube::setHemicube(Plane plane, int iteration){
 	topPatches2 = subdivide(topPlane2, iterations / 2);
 	bottomPatches1 = subdivide(bottomPlane1, iterations / 2);
 	bottomPatches2 = subdivide(bottomPlane2, iterations / 2);
+	//put all in one
+	//patches.reserve(frontPatches.size() + leftPatches1.size() + leftPatches2.size() + 
+	//	rightPatches1.size() + rightPatches2.size() + topPatches1.size() + topPatches2.size + bottomPatches1.size() + bottomPatches2.size());
+	patches.insert(patches.end(),frontPatches.begin(),frontPatches.end());
+	patches.insert(patches.end(), leftPatches1.begin(), leftPatches1.end());
+	patches.insert(patches.end(), leftPatches2.begin(), leftPatches2.end());
+	patches.insert(patches.end(), topPatches2.begin(), topPatches2.end());
+	patches.insert(patches.end(), topPatches1.begin(), topPatches1.end());
+	patches.insert(patches.end(), rightPatches1.begin(), rightPatches1.end());
+	patches.insert(patches.end(), rightPatches2.begin(), rightPatches2.end());
+	patches.insert(patches.end(), bottomPatches1.begin(), bottomPatches1.end());
+	patches.insert(patches.end(), bottomPatches2.begin(), bottomPatches2.end());
 	/*
 	leftPatches.push_back(leftPatches1);
 	leftPatches.push_back(leftPatches2);
