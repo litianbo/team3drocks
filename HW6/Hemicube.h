@@ -17,8 +17,8 @@ public:
 		leftPatches2, rightPatches2, topPatches2, bottomPatches2;
 	Hemicube();
 	void setHemicube(Plane,int);
-	void crossProduct(Position3, Position3, Position3);
-	void normalize(Position3);
+	void crossProduct(Position3, Position3, Position3 &normal);
+	void normalize(Position3 &normal);
 	
 };
 
