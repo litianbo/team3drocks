@@ -2,4 +2,5 @@
 #include <vector>
 using namespace std;
 
-vector<float> formfactor(vector<Plane> SPL, Plane O);
+vector<float> formfactor(vector<Plane> SPL, Plane patch);
+bool inPatch(Plane patch, Position3 point);
