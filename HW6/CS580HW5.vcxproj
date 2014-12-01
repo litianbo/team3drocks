@@ -14,6 +14,7 @@
     <SccProjectName />
     <SccLocalPath />
     <Keyword>MFCProj</Keyword>
+    <ProjectGuid>{47EFB235-7CB1-6F7E-8FE7-F403D24F6C18}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -135,6 +136,8 @@
     <ClCompile Include="CS580HWDoc.cpp" />
     <ClCompile Include="CS580HWView.cpp" />
     <ClCompile Include="disp.cpp" />
+    <ClCompile Include="formfactor.cpp" />
+    <ClCompile Include="Hemicube.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="OBJParser.cpp" />
     <ClCompile Include="Position3.cpp" />
@@ -160,7 +163,9 @@
     <ClInclude Include="CS580HWDoc.h" />
     <ClInclude Include="CS580HWView.h" />
     <ClInclude Include="disp.h" />
+    <ClInclude Include="formfactor.h" />
     <ClInclude Include="gz.h" />
+    <ClInclude Include="Hemicube.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="OBJParser.h" />
     <ClInclude Include="Position3.h" />
