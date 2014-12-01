@@ -4,7 +4,7 @@
 #include <memory.h>
 #include <tchar.h>
 #include <vector>
-
+#include "gz.h"
 
 
 

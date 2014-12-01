@@ -60,10 +60,10 @@
     <ClCompile Include="Position3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Hemicube.cpp">
+    <ClCompile Include="formfactor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="formfactor.cpp">
+    <ClCompile Include="Hemicube.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -121,10 +121,10 @@
     <ClInclude Include="Position3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Hemicube.h">
+    <ClInclude Include="formfactor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="formfactor.h">
+    <ClInclude Include="Hemicube.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "formfactor.h"
 
 vector<float> formfactor(vector<Plane> SPL, Plane patch)
@@ -39,7 +40,7 @@ vector<float> formfactor(vector<Plane> SPL, Plane patch)
 			for (int j = 0; j < 3; j++)
 				P0.pos[j] = O.pos[j] + t*(O.pos[j] - P.pos[j]);
 
-			if (inPatch(SPL[i], P0)) formfactorlist[i] += 1;
+			if (inPatch(SPL[i], P0)) formfactorlist[i] += 0.25;
 		}
 	}
 
@@ -48,5 +49,200 @@ vector<float> formfactor(vector<Plane> SPL, Plane patch)
 
 bool inPatch(Plane patch, Position3 point)
 {
+	/* Project the whole polygon onto x-y plane. If the projection is also a polygon,
+	 * decide the clockwise order of the projection. If the projection is a line, 
+	 * then project the polygon onto another plane and decide the clockwise order.
+	 */
 
+	/* Sort the vertices based on y coordinates */
+	int top, bottom;
+	int v0, v1, v2, v3;
+	top = bottom = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		if (patch.position[i].pos[1]>patch.position[top].pos[1]) top = i;
+		if (patch.position[i].pos[1] < patch.position[bottom].pos[1]) bottom = i;
+	}
+
+	/* Find the indices of the other two vertices */
+	int v[2];
+	int idx = 0;
+	for (int i = 0; i < 4; i++)
+	{
+		if (i == top || i == bottom) continue;
+		else
+		{
+			v[idx] = i;
+			idx++;
+		}
+	}
+
+	/* Calculate the d value of each line */
+	float d_bt, d_v0b, d_v1b;
+	d_bt = d(patch.position[top], patch.position[bottom], 0, 1);
+	d_v0b = d(patch.position[bottom], patch.position[v[0]], 0, 1);
+	d_v1b = d(patch.position[bottom], patch.position[v[1]], 0, 1);
+
+	if (d_bt == d_v0b && d_bt == d_v1b) // The projection on x-y plane is a line
+	{
+		/* Project the polygon onto x-z plane */
+
+		/* Sort the vertices based on z coordinates */
+		for (int i = 0; i < 4; i++)
+		{
+			if (patch.position[i].pos[2]>patch.position[top].pos[2]) top = i;
+			if (patch.position[i].pos[2] < patch.position[bottom].pos[2]) bottom = i;
+		}
+
+		/* Find the indices of the other two vertices */
+		idx = 0;
+		for (int i = 0; i < 4; i++)
+		{
+			if (i == top || i == bottom) continue;
+			else
+			{
+				v[idx] = i;
+				idx++;
+			}
+		}
+
+		/* Decide right/left of the two vertices */
+		float x0, x1;
+		x0 = patch.position[top].pos[0] - (patch.position[top].pos[0] - patch.position[bottom].pos[0]) / (patch.position[top].pos[2] - patch.position[bottom].pos[2])
+			*(patch.position[top].pos[2] - patch.position[v[0]].pos[2]);
+		x1 = patch.position[top].pos[0] - (patch.position[top].pos[0] - patch.position[bottom].pos[0]) / (patch.position[top].pos[2] - patch.position[bottom].pos[2])
+			*(patch.position[top].pos[2] - patch.position[v[1]].pos[2]);
+
+		if ((x0 - patch.position[v[0]].pos[0])*(x1 - patch.position[v[1]].pos[0]) < 0)
+		{
+			v0 = top;
+			v2 = bottom;
+			if (patch.position[v[0]].pos[0] > x0)
+			{
+				v1 = v[0];
+				v3 = v[1];
+			}
+			else
+			{
+				v1 = v[1];
+				v3 = v[0];
+			}
+		}
+		else if (patch.position[v[0]].pos[0] > x0 && patch.position[v[1]].pos[0] > x1)
+		{
+			v0 = top;
+			v3 = bottom;
+			if (patch.position[v[0]].pos[2] > patch.position[v[1]].pos[2])
+			{
+				v1 = v[0];
+				v2 = v[1];
+			}
+			else
+			{
+				v1 = v[1];
+				v2 = v[0];
+			}
+		}
+		else if (patch.position[v[0]].pos[0] < x0 && patch.position[v[1]].pos[0] < x1)
+		{
+			v0 = top;
+			v1 = bottom;
+			if (patch.position[v[0]].pos[2] > patch.position[v[1]].pos[2])
+			{
+				v3 = v[0];
+				v2 = v[1];
+			}
+			else
+			{
+				v3 = v[1];
+				v2 = v[0];
+			}
+		}
+
+		if (LEE(patch.position[v1], patch.position[v0], point, 0, 2) > 0 &&
+			LEE(patch.position[v2], patch.position[v1], point, 0, 2) > 0 &&
+			LEE(patch.position[v3], patch.position[v2], point, 0, 2) > 0 &&
+			LEE(patch.position[v0], patch.position[v3], point, 0, 2) > 0)
+			return true;
+
+	}
+	else
+	{
+		/* Decide right/left of the two vertices */
+		float x0, x1;
+		x0 = patch.position[top].pos[0] - (patch.position[top].pos[0] - patch.position[bottom].pos[0]) / (patch.position[top].pos[1] - patch.position[bottom].pos[1])
+			*(patch.position[top].pos[1] - patch.position[v[0]].pos[1]);
+		x1 = patch.position[top].pos[0] - (patch.position[top].pos[0] - patch.position[bottom].pos[0]) / (patch.position[top].pos[1] - patch.position[bottom].pos[1])
+			*(patch.position[top].pos[1] - patch.position[v[1]].pos[1]);
+
+		if ((x0 - patch.position[v[0]].pos[0])*(x1 - patch.position[v[1]].pos[0]) < 0)
+		{
+			v0 = top;
+			v2 = bottom;
+			if (patch.position[v[0]].pos[0] > x0)
+			{
+				v1 = v[0];
+				v3 = v[1];
+			}
+			else
+			{
+				v1 = v[1];
+				v3 = v[0];
+			}
+		}
+		else if (patch.position[v[0]].pos[0] > x0 && patch.position[v[1]].pos[0] > x1)
+		{
+			v0 = top;
+			v3 = bottom;
+			if (patch.position[v[0]].pos[1] > patch.position[v[1]].pos[1])
+			{
+				v1 = v[0];
+				v2 = v[1];
+			}
+			else
+			{
+				v1 = v[1];
+				v2 = v[0];
+			}
+		}
+		else if (patch.position[v[0]].pos[0] < x0 && patch.position[v[1]].pos[0] < x1)
+		{
+			v0 = top;
+			v1 = bottom;
+			if (patch.position[v[0]].pos[1] > patch.position[v[1]].pos[1])
+			{
+				v3 = v[0];
+				v2 = v[1];
+			}
+			else
+			{
+				v3 = v[1];
+				v2 = v[0];
+			}
+		}
+
+		if (LEE(patch.position[v1], patch.position[v0], point, 0, 1) > 0 &&
+			LEE(patch.position[v2], patch.position[v1], point, 0, 1) > 0 &&
+			LEE(patch.position[v3], patch.position[v2], point, 0, 1) > 0 &&
+			LEE(patch.position[v0], patch.position[v3], point, 0, 1) > 0)
+			return true;
+	}
+	
+	return false;
+}
+
+float d(Position3 u, Position3 v, int i, int j)
+{
+	return (u.pos[i] - v.pos[i]) / (u.pos[j] - v.pos[j]);
+}
+
+float LEE(Position3 tail, Position3 head, Position3 point, int i, int j)
+{
+	float deltaX = head.pos[i] - tail.pos[i];
+	float deltaY = head.pos[j] - tail.pos[j];
+	float x = point.pos[i];
+	float y = point.pos[j];
+
+	float decision = deltaY*x - deltaX*y + deltaX*tail.pos[j] - deltaY*tail.pos[i];
+	return decision;
 }
