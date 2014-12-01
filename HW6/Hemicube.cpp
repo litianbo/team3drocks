@@ -8,19 +8,18 @@
 Hemicube::Hemicube(){
 	//need to put this cube into a list.
 }
-void Hemicube::crossProduct(Position3 a, Position3 b,Position3 c){
+void Hemicube::crossProduct(Position3 a, Position3 b, Position3 &c){
 	//c always needs to be up. Hence, b X a.
 	c.pos[0] = b.pos[1] * a.pos[2] - b.pos[2] * a.pos[1];
 	c.pos[1] = -(b.pos[0] * a.pos[2] - b.pos[2] * a.pos[0]);
 	c.pos[2] = b.pos[0] * a.pos[1] - b.pos[1] * a.pos[0];
 }
-void Hemicube::normalize(Position3 a){
+void Hemicube::normalize(Position3 &a){
 	//c always needs to be up. Hence, b X a.
-	Position3 tempa;
-	tempa = a;
+	float k = 1 / sqrtf(a.pos[0] * a.pos[0] +
+		a.pos[1] * a.pos[1] + a.pos[2] * a.pos[2]);
 	for (int i = 0; i < 3; i++){
-		a.pos[i] = tempa.pos[i] / sqrtf(tempa.pos[0] * tempa.pos[0] +
-			tempa.pos[1] * tempa.pos[1] + tempa.pos[2] * tempa.pos[2]);
+		a.pos[i] = a.pos[i] * k;
 	}
 		
 }
@@ -98,6 +97,18 @@ void Hemicube::setHemicube(Plane plane, int iteration){
 	topPatches2 = subdivide(topPlane2, iterations / 2);
 	bottomPatches1 = subdivide(bottomPlane1, iterations / 2);
 	bottomPatches2 = subdivide(bottomPlane2, iterations / 2);
+	//put all in one
+	//patches.reserve(frontPatches.size() + leftPatches1.size() + leftPatches2.size() + 
+	//	rightPatches1.size() + rightPatches2.size() + topPatches1.size() + topPatches2.size + bottomPatches1.size() + bottomPatches2.size());
+	patches.insert(patches.end(),frontPatches.begin(),frontPatches.end());
+	patches.insert(patches.end(), leftPatches1.begin(), leftPatches1.end());
+	patches.insert(patches.end(), leftPatches2.begin(), leftPatches2.end());
+	patches.insert(patches.end(), topPatches2.begin(), topPatches2.end());
+	patches.insert(patches.end(), topPatches1.begin(), topPatches1.end());
+	patches.insert(patches.end(), rightPatches1.begin(), rightPatches1.end());
+	patches.insert(patches.end(), rightPatches2.begin(), rightPatches2.end());
+	patches.insert(patches.end(), bottomPatches1.begin(), bottomPatches1.end());
+	patches.insert(patches.end(), bottomPatches2.begin(), bottomPatches2.end());
 	/*
 	leftPatches.push_back(leftPatches1);
 	leftPatches.push_back(leftPatches2);

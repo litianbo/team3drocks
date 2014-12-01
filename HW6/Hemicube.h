@@ -14,11 +14,11 @@ private:
 	
 public:
 	std::vector<Plane> frontPatches, leftPatches1, rightPatches1, topPatches1, bottomPatches1,
-		leftPatches2, rightPatches2, topPatches2, bottomPatches2;
+		leftPatches2, rightPatches2, topPatches2, bottomPatches2, patches;
 	Hemicube();
 	void setHemicube(Plane,int);
-	void crossProduct(Position3, Position3, Position3);
-	void normalize(Position3);
+	void crossProduct(Position3, Position3, Position3 &normal);
+	void normalize(Position3 &normal);
 	
 };
 

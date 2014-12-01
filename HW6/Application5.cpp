@@ -426,6 +426,11 @@ else
 
 vector<vector<Plane>> wallList;
 
+//////////////////////////
+// patches list for all patches
+vector<Plane> patcheList;
+//////////////////////////
+
 for(i=0;i<myOBJ.getNumOfFaces();i=i+2)
 {
 	Face f1,f2;
@@ -469,6 +474,9 @@ for(i=0;i<myOBJ.getNumOfFaces();i=i+2)
 	Plane p;
 
 	p.setPlane(wallPosition);
+
+	/* add to patches list */
+	patcheList.push_back(p);
 
 	vector<Plane> subd = subdivide(p, 2);
 
@@ -599,6 +607,14 @@ for (int i = 0; i < wallList.size(); i++){
 		return(GZ_SUCCESS); 
 }
 
+/////////////////////
+/*Radiosity equation*/
+void RadiosityEqu(vector<Plane>patchList)
+{
+	// Bi = Ei +Pi*sigma(Bj*Fij)
+
+}
+/////////////////////
 int Application5::Clean()
 {
 	/* 
