@@ -44,6 +44,7 @@ class Plane
 	public:
 	
 	Position3 position[4];
+	GzColor radiosityValue;
 
 	Plane();
 		// Destructor
