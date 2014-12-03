@@ -12,6 +12,7 @@
 #include "Gz.h"
 #include "disp.h"
 #include "rend.h"
+#include "formfactor.h"
 
 /////////////// new final project include
 #include "OBJParser.h"
@@ -31,7 +32,7 @@ using namespace std;
 #include <algorithm>
 /////////////////////
 //hemicube, removed position3.h since it is included in hemicube.h
-#include "Hemicube.h"
+//#include "Hemicube.h"
 
 
 
@@ -342,6 +343,46 @@ GzMatrix	rotateY =
 		return(GZ_SUCCESS); 
 }
 
+/////////////////////
+/*Radiosity equation*/
+void RadiosityEqu(vector<Plane>patchList)
+{
+	GzColor P;
+	P[0] = P[1] = P[2] = 0.7;// tmp Kd
+
+	//GzColor * B = new GzColor[patchList.size()];
+	GzColor E ; // to get emmition from light source, most of them are dark 0
+	vector<float> formfactorlist;
+	Plane patch_i, patch_j ;
+	GzColor sumJ;
+
+	// Bi = Ei +Pi*sigma(Bj*Fij)
+	for (int i = 0; i < patchList.size(); i++)
+	{
+		patch_i = patchList.at(i);
+		formfactorlist = formfactor(patchList, patch_i);
+		E[0] = patch_i.lightSource[0];
+		E[1] = patch_i.lightSource[1];
+		E[2] = patch_i.lightSource[2];
+		sumJ[0] = sumJ[1] = sumJ[2] = 0.0;
+		for (int j = 0; j < patchList.size(); j++)
+		{
+			if(j == i) // all j except i
+				continue;
+			patch_j = patchList.at(j);
+			sumJ[0] += patch_j.radiosityValue[0]*formfactorlist.at(j);
+			sumJ[1] += patch_j.radiosityValue[1]*formfactorlist.at(j);
+			sumJ[2] += patch_j.radiosityValue[2]*formfactorlist.at(j);
+		}
+		// Bi = Ei +Pi*sigma(Bj*Fij)
+		patch_i.radiosityValue[0] = E[0] + P[0]* sumJ[0];
+		patch_i.radiosityValue[1] = E[1] + P[1]* sumJ[1];
+		patch_i.radiosityValue[2] = E[2] + P[2]* sumJ[2];
+		
+	}
+}
+/////////////////////
+
 int Application5::Render() 
 {
 	GzToken		nameListTriangle[3]; 	/* vertex attribute names */
@@ -474,6 +515,20 @@ for(i=0;i<myOBJ.getNumOfFaces();i=i+2)
 	Plane p;
 
 	p.setPlane(wallPosition);
+	
+	// give light source to a face
+	if(i==0)
+	{	
+		p.lightSource[0] = 0.3;
+		p.lightSource[1] = 0.3;
+		p.lightSource[2] = 0.3;
+	}	
+	else
+	{	
+		p.lightSource[0] = 0;
+		p.lightSource[1] = 0;
+		p.lightSource[2] = 0;
+	}	
 
 	/* add to patches list */
 	patcheList.push_back(p);
@@ -585,6 +640,15 @@ for (int i = 0; i < wallList.size(); i++){
 			}
 
 		}
+
+		// call radiosity equation several times
+		int nTimes = 0;
+		while(nTimes++ != 4)
+		{
+			RadiosityEqu(patcheList);
+		}
+		// set color to display
+		//GzPutDisplay(m_pDisplay, 
 	
 ///////////////////////////////////////
 
@@ -607,14 +671,6 @@ for (int i = 0; i < wallList.size(); i++){
 		return(GZ_SUCCESS); 
 }
 
-/////////////////////
-/*Radiosity equation*/
-void RadiosityEqu(vector<Plane>patchList)
-{
-	// Bi = Ei +Pi*sigma(Bj*Fij)
-
-}
-/////////////////////
 int Application5::Clean()
 {
 	/* 
