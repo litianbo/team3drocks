@@ -83,7 +83,7 @@ bool inPatch(Plane patch, Position3 point)
 	d_v0b = d(patch.position[bottom], patch.position[v[0]], 0, 1);
 	d_v1b = d(patch.position[bottom], patch.position[v[1]], 0, 1);
 
-	if (d_bt == d_v0b && d_bt == d_v1b) // The projection on x-y plane is a line
+	if ((d_bt == d_v0b && d_bt == d_v1b) || (top == bottom)) // The projection on x-y plane is a line
 	{
 		/* Project the polygon onto x-z plane */
 
