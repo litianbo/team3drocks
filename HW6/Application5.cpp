@@ -647,8 +647,48 @@ for (int i = 0; i < wallList.size(); i++){
 		{
 			RadiosityEqu(patcheList);
 		}
-		// set color to display
-		//GzPutDisplay(m_pDisplay, 
+
+		// process triangle
+		int n = 0;
+		while(n < patcheList.size())
+		{
+			// tri 1
+			vertexList[0][0] = patcheList.at(n).position[0].pos[0];
+			vertexList[0][1] = patcheList.at(n).position[0].pos[1];
+			vertexList[0][2] = patcheList.at(n).position[0].pos[2];
+
+			vertexList[1][0] = patcheList.at(n).position[1].pos[0];
+			vertexList[1][1] = patcheList.at(n).position[1].pos[1];
+			vertexList[1][2] = patcheList.at(n).position[1].pos[2];
+
+			vertexList[2][0] = patcheList.at(n).position[2].pos[0];
+			vertexList[2][1] = patcheList.at(n).position[2].pos[1];
+			vertexList[2][2] = patcheList.at(n).position[2].pos[2];
+
+			valueListTriangle[0] = (GzPointer)vertexList; 
+			//valueListTriangle[1] = (GzPointer)normalList; 
+			//valueListTriangle[2] = (GzPointer)uvList; 
+			GzPutTriangle(m_pRender, 3, nameListTriangle, valueListTriangle); 
+
+
+			// tri 2
+			vertexList[2][0] = patcheList.at(n).position[2].pos[0];
+			vertexList[2][1] = patcheList.at(n).position[2].pos[1];
+			vertexList[2][2] = patcheList.at(n).position[2].pos[2];
+
+			vertexList[3][0] = patcheList.at(n).position[3].pos[0];
+			vertexList[3][1] = patcheList.at(n).position[3].pos[1];
+			vertexList[3][2] = patcheList.at(n).position[3].pos[2];
+
+			vertexList[1][0] = patcheList.at(n).position[1].pos[0];
+			vertexList[1][1] = patcheList.at(n).position[1].pos[1];
+			vertexList[1][2] = patcheList.at(n).position[1].pos[2];
+
+			valueListTriangle[0] = (GzPointer)vertexList; 
+			GzPutTriangle(m_pRender, 3, nameListTriangle, valueListTriangle); 
+
+			n++;
+		}
 	
 ///////////////////////////////////////
 
