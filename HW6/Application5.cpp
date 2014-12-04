@@ -331,7 +331,7 @@ int Application5::Render()
 /////////////////////// objpath init
 
 
-	char ptr[]="cornell.obj";
+	char ptr[]="cornellsimple2.obj";
 	char *objpath;
 	objpath=ptr;
     //instantiate obj parser
@@ -420,8 +420,16 @@ for(i=0;i<myOBJ.getNumOfFaces();i=i+2)
 	if(it != posList.end()) {}
     else 
 	{
-		 Vertex v = myOBJ.getVertex(currentVertex);
-		 wallPosition[3].setPosition(v.x,v.y,v.z); 
+		Position3 walltmpPosition;
+
+		walltmpPosition = wallPosition[2];
+
+		Vertex v = myOBJ.getVertex(currentVertex);
+		wallPosition[2].setPosition(v.x, v.y, v.z);
+
+		wallPosition[3] = walltmpPosition;
+		 //Vertex v = myOBJ.getVertex(currentVertex);
+		 //wallPosition[3].setPosition(v.x,v.y,v.z); 
     }
 
 
