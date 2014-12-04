@@ -6,13 +6,16 @@ vector<float> formfactor(vector<Plane> SPL, Plane patch)
 	vector<float> formfactorlist(SPL.size());
 	Position3 O = Position3();
 
+	for (int i = 0; i < SPL.size(); i++)
+		formfactorlist[i] == 0;
+
 	/* Calculate the center of this patch */
 	for (int i = 0; i < 3; i++)
 		O.pos[i] = (patch.position[0].pos[i] + patch.position[1].pos[i] + patch.position[2].pos[i] + patch.position[3].pos[i]) / 4;
 
 	/* Construct the hemicube list */
 	Hemicube HPL = Hemicube();
-	HPL.setHemicube(patch, 2);
+	HPL.setHemicube(patch, 1);
 
 	vector<Plane>::iterator itr = HPL.patches.begin();
 	while (itr != HPL.patches.end())
@@ -34,13 +37,15 @@ vector<float> formfactor(vector<Plane> SPL, Plane patch)
 			u = (P2.pos[1] - P1.pos[1])*(P3.pos[2] - P1.pos[2]) - (P2.pos[2] - P1.pos[2])*(P3.pos[1] - P1.pos[1]);
 			v = (P2.pos[2] - P1.pos[2])*(P3.pos[0] - P1.pos[0]) - (P2.pos[0] - P1.pos[0])*(P3.pos[2] - P1.pos[2]);
 			w = (P2.pos[0] - P1.pos[0])*(P3.pos[1] - P1.pos[1]) - (P2.pos[1] - P1.pos[1])*(P3.pos[0] - P1.pos[0]);
-			t = (P1.pos[0] * u + P1.pos[1] * v + P1.pos[2] * w - O.pos[0] - O.pos[1] - O.pos[2]) /
-				(O.pos[0] + O.pos[1] + O.pos[2] - P.pos[0] - P.pos[1] - P.pos[2]);
+			t = ((P1.pos[0] - O.pos[0])*u + (P1.pos[1] - O.pos[1])*v + (P1.pos[2] - O.pos[2])*w) /
+				((O.pos[0] - P.pos[0])*u + (O.pos[1] - P.pos[1])*v + (O.pos[2] - P.pos[2])*w);
 
 			for (int j = 0; j < 3; j++)
 				P0.pos[j] = O.pos[j] + t*(O.pos[j] - P.pos[j]);
 
-			if (inPatch(SPL[i], P0)) formfactorlist[i] += 0.25;
+			if (P0.pos[0] == O.pos[0] && P0.pos[1] == O.pos[1] && P0.pos[2] == O.pos[2]) continue;
+			if (inPatch(SPL[i], P0)) 
+				formfactorlist[i] += 0.25;
 		}
 
 		itr++;
@@ -240,7 +245,7 @@ float d(Position3 u, Position3 v, int i, int j)
 	return (u.pos[i] - v.pos[i]) / (u.pos[j] - v.pos[j]);
 }
 
-float LEE(Position3 tail, Position3 head, Position3 point, int i, int j)
+float LEE(Position3 head, Position3 tail, Position3 point, int i, int j)
 {
 	float deltaX = head.pos[i] - tail.pos[i];
 	float deltaY = head.pos[j] - tail.pos[j];
