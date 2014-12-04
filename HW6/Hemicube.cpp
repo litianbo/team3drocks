@@ -31,7 +31,7 @@ void Hemicube::setHemicube(Plane plane, int iteration){
 	//need nomral to cacalulate front view plane.
 	Position3 a = position[1] - position[0];
 	Position3 b = position[2] - position[0];
-	crossProduct(b, a, normal);
+	crossProduct(a, b, normal);
 	normalize(normal);
 	//construct front view vertexes
 	//find the center point using interpolation
@@ -43,8 +43,8 @@ void Hemicube::setHemicube(Plane plane, int iteration){
 	temp2.pos[1] = (position[3].pos[1] + position[2].pos[1]) / 2;
 	temp2.pos[2] = (position[3].pos[2] + position[2].pos[2]) / 2;
 	center.pos[0] = (temp1.pos[0] + temp2.pos[0]) / 2;
-	center.pos[1] = (temp1.pos[0] + temp2.pos[0]) / 2;
-	center.pos[2] = (temp1.pos[0] + temp2.pos[0]) / 2;
+	center.pos[1] = (temp1.pos[1] + temp2.pos[1]) / 2;
+	center.pos[2] = (temp1.pos[2] + temp2.pos[2]) / 2;
 	//find center in front plane
 	centerFront = center + normal;
 	//find the front plane vertexes
@@ -71,14 +71,14 @@ void Hemicube::setHemicube(Plane plane, int iteration){
 	normalTop.pos[1] = -a.pos[1];
 	normalTop.pos[2] = -a.pos[2];
 	//divide the side plane by 2 equal square
-	leftPlane1.setPlane(position[3] - normal, position[3] - normalBottom - normal, position[3] - normalBottom, position[3]);
-	leftPlane2.setPlane(position[0] - normal + normalBottom, position[0] - normal, position[0], position[0] + normalBottom);
-	bottomPlane1.setPlane(position[0] - normal, position[0] - normal + normalLeft, position[0] + normalLeft, position[0]);
-	bottomPlane2.setPlane(position[0] - normal + normalLeft, position[1] - normal, position[1], position[0] + normalLeft);
-	rightPlane1.setPlane(position[1] - normal, position[1] - normal + normalBottom, position[1] + normalBottom, position[1]);
-	rightPlane2.setPlane(position[1] - normal + normalBottom, position[2] - normal, position[2], position[1] + normalBottom);
-	topPlane1.setPlane(position[2] - normal, position[2] - normal - normalLeft, position[2] - normalLeft, position[2]);
-	topPlane2.setPlane(position[2] - normalLeft - normal, position[3] - normal, position[3],position[2] - normalLeft);
+	leftPlane1.setPlane(frontPosition[3] - normal, frontPosition[3] - normalBottom - normal, frontPosition[3] - normalBottom, frontPosition[3]);
+	leftPlane2.setPlane(frontPosition[0] - normal + normalBottom, frontPosition[0] - normal, frontPosition[0], frontPosition[0] + normalBottom);
+	bottomPlane1.setPlane(frontPosition[0] - normal, frontPosition[0] - normal + normalLeft, frontPosition[0] + normalLeft, frontPosition[0]);
+	bottomPlane2.setPlane(frontPosition[0] - normal + normalLeft, frontPosition[1] - normal, frontPosition[1], frontPosition[0] + normalLeft);
+	rightPlane1.setPlane(frontPosition[1] - normal, frontPosition[1] - normal + normalBottom, frontPosition[1] + normalBottom, frontPosition[1]);
+	rightPlane2.setPlane(frontPosition[1] - normal + normalBottom, frontPosition[2] - normal, frontPosition[2], frontPosition[1] + normalBottom);
+	topPlane1.setPlane(frontPosition[2] - normal, frontPosition[2] - normal - normalLeft, frontPosition[2] - normalLeft, frontPosition[2]);
+	topPlane2.setPlane(frontPosition[2] - normalLeft - normal, frontPosition[3] - normal, frontPosition[3], frontPosition[2] - normalLeft);
 	leftPatches1 = subdivide(leftPlane1, iterations / 2);
 	leftPatches2 = subdivide(leftPlane2, iterations / 2);
 	rightPatches1 = subdivide(rightPlane1, iterations / 2);
