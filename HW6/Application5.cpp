@@ -650,8 +650,14 @@ for (int i = 0; i < wallList.size(); i++){
 
 		// process triangle
 		int n = 0;
+		GzToken		nameListColor[3];		/* color type names */
+		GzPointer	valueListColor[3];	/* color type rgb pointers */
 		while(n < patcheList.size())
 		{
+			valueListColor[0] = (GzPointer)patcheList.at(n).radiosityValue; 
+			nameListColor[0] = GZ_RGB_COLOR; 
+			GzPutAttribute(m_pRender, 1, nameListColor, valueListColor);
+
 			// tri 1
 			vertexList[0][0] = patcheList.at(n).position[0].pos[0];
 			vertexList[0][1] = patcheList.at(n).position[0].pos[1];
