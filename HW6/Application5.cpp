@@ -300,6 +300,9 @@ void RadiosityEqu(vector<Plane>patchList)
 		patch_i.radiosityValue[1] = E[1] + P[1]* sumJ[1];
 		patch_i.radiosityValue[2] = E[2] + P[2]* sumJ[2];
 		
+		patchList.at(i).radiosityValue[0] = patch_i.radiosityValue[0];
+		patchList.at(i).radiosityValue[1] = patch_i.radiosityValue[1];
+		patchList.at(i).radiosityValue[2] = patch_i.radiosityValue[2];
 	}
 }
 /////////////////////
