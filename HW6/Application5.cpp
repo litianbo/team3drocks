@@ -374,12 +374,12 @@ else
             
         }//vertex for loop
 
-
+	 /*
 	  valueListTriangle[0] = (GzPointer)vertexList; 
 	  valueListTriangle[1] = (GzPointer)normalList; 
 	  valueListTriangle[2] = (GzPointer)uvList; 
 	  GzPutTriangle(m_pRender, 3, nameListTriangle, valueListTriangle); 
-
+	  */
 	
 }
 //////***************/////  divide all the plane into patches
