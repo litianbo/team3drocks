@@ -266,7 +266,7 @@ GzMatrix	rotateY =
 
 /////////////////////
 /*Radiosity equation*/
-void RadiosityEqu(vector<Plane>patchList)
+vector<Plane> RadiosityEqu(vector<Plane>patchList)
 {
 	GzColor P;
 	P[0] = P[1] = P[2] = 0.7;// tmp Kd
@@ -304,6 +304,7 @@ void RadiosityEqu(vector<Plane>patchList)
 		patchList.at(i).radiosityValue[1] = patch_i.radiosityValue[1];
 		patchList.at(i).radiosityValue[2] = patch_i.radiosityValue[2];
 	}
+	return patchList;
 }
 /////////////////////
 
@@ -501,7 +502,7 @@ for(i=0;i<myOBJ.getNumOfFaces();i=i+2)
 		int nTimes = 0;
 		while(nTimes++ != 4)
 		{
-			RadiosityEqu(patcheList);
+			patcheList = RadiosityEqu(patcheList);
 		}
 
 		// process triangle
