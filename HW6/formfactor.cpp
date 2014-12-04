@@ -42,6 +42,8 @@ vector<float> formfactor(vector<Plane> SPL, Plane patch)
 
 			if (inPatch(SPL[i], P0)) formfactorlist[i] += 0.25;
 		}
+
+		itr++;
 	}
 
 	return formfactorlist;
