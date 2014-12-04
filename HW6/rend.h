@@ -1,6 +1,5 @@
 #include "disp.h" /* include your own disp.h file (e.g. hw1)*/
 
-
 /* Camera defaults */
 #define	DEFAULT_FOV		35.0
 #define	DEFAULT_IM_Z	(-10.0)  /* world coords for image plane origin */
@@ -15,16 +14,7 @@
 #define	MATLEVELS	100		/* how many matrix pushes allowed */
 #define	MAX_LIGHTS	10		/* how many lights allowed */
 
-/* Dummy definition : change it later 
-//#ifndef GzLight
-//#define GzLight		GzPointer
-//#endif
 
-
-//#ifndef GzTexture
-//#define GzTexture	GzPointer
-//#endif
-*/
 #ifndef GZRENDER
 #define GZRENDER
 typedef struct {			/* define a renderer */
@@ -33,11 +23,6 @@ typedef struct {			/* define a renderer */
   short		    open;
   GzCamera		camera;
   short		    matlevel;	        /* top of stack - current xform */
-
-  short         normallevel;        // top of nomal stack
-
-  GzColor       gouraudcolor[3];    // three vertex color //
-
   GzMatrix		Ximage[MATLEVELS];	/* stack of xforms (Xsm) */
   GzMatrix		Xnorm[MATLEVELS];	/* xforms for norms (Xim) */
   GzMatrix		Xsp;		        /* NDC to screen (pers-to-screen) */
@@ -49,11 +34,6 @@ typedef struct {			/* define a renderer */
   GzColor		Ka, Kd, Ks;
   float		    spec;		/* specular power */
   GzTexture		tex_fun;    /* tex_fun(float u, float v, GzColor color) */
-
-  float         dx;         // antialiasing dx 
-  float         dy;			// antialiasing dy
-
-  float        	_Normal[3][3];// set by my self
 }  GzRender;
 #endif
 
@@ -78,9 +58,14 @@ int GzRotYMat(float degree, GzMatrix mat);
 int GzRotZMat(float degree, GzMatrix mat);
 int GzTrxMat(GzCoord translate, GzMatrix mat);
 int GzScaleMat(GzCoord scale, GzMatrix mat);
-int ComputeStack(GzRender	*render, int stacklevel, GzMatrix *EndMatrix, int type); //compute the stack from the layer you want
 
-//HW4 Shading 
-void shade_equation(GzRender *render,GzCoord norm,  GzColor *finalcolor);
-float unify(float x, float y, float z);
-
+// Self-defined functions
+float* crossProduct(float* v1, float* v2);
+float dotProduct(GzCoord x, GzCoord y);
+float length(GzCoord v);
+void transform(GzRender *render, GzCoord vl);
+void scanConverter(GzRender *render, GzCoord *vertexList);
+float LEE(GzCoord tail, GzCoord head, GzCoord point);
+int Rasterize(GzDisplay *display, int i, int j, GzIntensity r, GzIntensity g, GzIntensity b, GzIntensity a, float z);
+void applyMatrix(float *v, GzMatrix mat);
+void matrixMulti(GzMatrix A, GzMatrix B, GzMatrix C);

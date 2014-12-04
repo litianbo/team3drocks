@@ -116,37 +116,15 @@ int Application5::Initialize()
 	status |= GzNewFrameBuffer(&m_pFrameBuffer, m_nWidth, m_nHeight);
 
 	status |= GzNewDisplay(&m_pDisplay, GZ_RGBAZ_DISPLAY, m_nWidth, m_nHeight);
-//////////
-	for(i=0;i<AAKERNEL_SIZE;i++)
-	{
-	status |= GzNewDisplay(&m_pSampleDisplay[i], GZ_RGBAZ_DISPLAY, m_nWidth, m_nHeight);
-	}
-/////
+
 	status |= GzGetDisplayParams(m_pDisplay, &xRes, &yRes, &dispClass); 
-//////////
-	for(i=0;i<AAKERNEL_SIZE;i++)
-	{
-	status |= GzGetDisplayParams(m_pSampleDisplay[i], &xRes, &yRes, &dispClass); 
-	}
-////	 
 
 
 	status |= GzInitDisplay(m_pDisplay); 
-///////
-	for(i=0;i<AAKERNEL_SIZE;i++)
-	{
-	status |= GzInitDisplay(m_pSampleDisplay[i]); 
-	}
 
-////
 	status |= GzNewRender(&m_pRender, GZ_Z_BUFFER_RENDER, m_pDisplay); 
 
-///////
-	for(i=0;i<AAKERNEL_SIZE;i++)
-	{
-	status |= GzNewRender(&m_pSampleRender[i], GZ_Z_BUFFER_RENDER, m_pSampleDisplay[i]); 
-	}
-///
+
 
 /* Translation matrix */
 GzMatrix	scale = 
@@ -190,24 +168,13 @@ GzMatrix	rotateY =
 
 	status |= GzPutCamera(m_pRender, &camera); 
 
-/////
-	for(i=0;i<AAKERNEL_SIZE;i++)
-	{
-	status |= GzPutCamera(m_pSampleRender[i], &camera); 
-	}
 
-//
 #endif 
 
 	/* Start Renderer */
 	status |= GzBeginRender(m_pRender);
 
-////
-	for(i=0;i<AAKERNEL_SIZE;i++)
-	{
-	status |= GzBeginRender(m_pSampleRender[i]);
-	}
-//
+
 	/* Light */
 	GzLight	light1 = { {-0.7071, 0.7071, 0}, {0.5, 0.5, 0.9} };
 	GzLight	light2 = { {0, -0.7071, -0.7071}, {0.9, 0.2, 0.3} };
@@ -235,20 +202,6 @@ GzMatrix	rotateY =
 		valueListShifters[1]=(GzPointer)&SHY;
 		status |= GzPutAttribute(m_pRender, 2, nameListShifters, valueListShifters);
 
-////
-			for(i=0;i<AAKERNEL_SIZE;i++)
-	{
-		nameListShifters[0]=GZ_AASHIFTX;
-		valueListShifters[0]=(GzPointer)&AAFilter[i][0];
-		nameListShifters[1]=GZ_AASHIFTY;
-		valueListShifters[1]=&AAFilter[i][1];
-
-	    status |= GzPutAttribute(m_pSampleRender[i], 2, nameListShifters, valueListShifters);
-	}
-//
-
-
-
 
         /*
          * Tokens associated with light parameters
@@ -260,21 +213,11 @@ GzMatrix	rotateY =
         nameListLights[2] = GZ_DIRECTIONAL_LIGHT;
         valueListLights[2] = (GzPointer)&light3;
         status |= GzPutAttribute(m_pRender, 3, nameListLights, valueListLights);
-////
-			for(i=0;i<AAKERNEL_SIZE;i++)
-	{
-	    status |= GzPutAttribute(m_pSampleRender[i], 3, nameListLights, valueListLights);
-	}
-//
+
         nameListLights[0] = GZ_AMBIENT_LIGHT;
         valueListLights[0] = (GzPointer)&ambientlight;
         status |= GzPutAttribute(m_pRender, 1, nameListLights, valueListLights);
-////
-			for(i=0;i<AAKERNEL_SIZE;i++)
-	{
-	    status |= GzPutAttribute(m_pSampleRender[i], 1, nameListLights, valueListLights);
-	}
-//
+
 
         /*
          * Tokens associated with shading 
@@ -305,35 +248,13 @@ GzMatrix	rotateY =
 #endif
         status |= GzPutAttribute(m_pRender, 6, nameListShader, valueListShader);
 
-////
-			for(i=0;i<AAKERNEL_SIZE;i++)
-	{
-	     status |= GzPutAttribute(m_pSampleRender[i], 6, nameListShader, valueListShader);
-	}
-//
-
 
 //	status |= GzPushMatrix(m_pRender, scale);  
-////
-			for(i=0;i<AAKERNEL_SIZE;i++)
-	{
-	    status |= GzPushMatrix(m_pSampleRender[i], scale);  
-	}
-//
+
 //	status |= GzPushMatrix(m_pRender, rotateY); 
-////
-			for(i=0;i<AAKERNEL_SIZE;i++)
-	{
-	    status |= GzPushMatrix(m_pSampleRender[i], rotateY); 
-	}
-//
+
 //	status |= GzPushMatrix(m_pRender, rotateX); 
-////
-			for(i=0;i<AAKERNEL_SIZE;i++)
-	{
-	   status |= GzPushMatrix(m_pSampleRender[i], rotateX); 
-	}
-//
+
 
 	if (status) exit(GZ_FAILURE); 
 
@@ -397,12 +318,7 @@ int Application5::Render()
 	/* Initialize Display */
 	status |= GzInitDisplay(m_pDisplay); 
 
-////
-			for(i=0;i<AAKERNEL_SIZE;i++)
-	{
-	 status |= GzInitDisplay(m_pSampleDisplay[i]); 
-	}
-//
+
 	
 	/* 
 	* Tokens associated with triangle vertex values 
@@ -544,16 +460,6 @@ for(i=0;i<myOBJ.getNumOfFaces();i=i+2)
 /////**************//////
 //Constructing Hemicube
 //calculate central point at each patch first
-vector<vector<Hemicube>> hemicubes;
-for (int i = 0; i < wallList.size(); i++){
-	vector<Hemicube> tempHemicubes;
-	for (int j = 0; j < wallList.at(i).size(); j++){
-		Hemicube h;
-		h.setHemicube(wallList.at(i).at(j),2);
-		tempHemicubes.push_back(h);
-	}
-	hemicubes.push_back(tempHemicubes);
-}
 /////**************//////
 ///////////////////////
 	// I/O File open
@@ -572,75 +478,8 @@ for (int i = 0; i < wallList.size(); i++){
 	}
 
 
-	/* 
-	* Walk through the list of triangles, set color 
-	* and render each triangle 
-	*/ 
-	while( fscanf(infile, "%s", dummy) == 1) { 	/* read in tri word */
-	    fscanf(infile, "%f %f %f %f %f %f %f %f", 
-		&(vertexList[0][0]), &(vertexList[0][1]),  
-		&(vertexList[0][2]), 
-		&(normalList[0][0]), &(normalList[0][1]), 	
-		&(normalList[0][2]), 
-		&(uvList[0][0]), &(uvList[0][1]) ); 
-	    fscanf(infile, "%f %f %f %f %f %f %f %f", 
-		&(vertexList[1][0]), &(vertexList[1][1]), 	
-		&(vertexList[1][2]), 
-		&(normalList[1][0]), &(normalList[1][1]), 	
-		&(normalList[1][2]), 
-		&(uvList[1][0]), &(uvList[1][1]) ); 
-	    fscanf(infile, "%f %f %f %f %f %f %f %f", 
-		&(vertexList[2][0]), &(vertexList[2][1]), 	
-		&(vertexList[2][2]), 
-		&(normalList[2][0]), &(normalList[2][1]), 	
-		&(normalList[2][2]), 
-		&(uvList[2][0]), &(uvList[2][1]) ); 
 
-	    /* 
-	     * Set the value pointers to the first vertex of the 	
-	     * triangle, then feed it to the renderer 
-	     * NOTE: this sequence matches the nameList token sequence
-	     */ 
-	     valueListTriangle[0] = (GzPointer)vertexList; 
-		 valueListTriangle[1] = (GzPointer)normalList; 
-		 valueListTriangle[2] = (GzPointer)uvList; 
-	//	 GzPutTriangle(m_pRender, 3, nameListTriangle, valueListTriangle); 
-
-////
-			for(i=0;i<AAKERNEL_SIZE;i++)
-	{
-	//GzPutTriangle(m_pSampleRender[i], 3, nameListTriangle, valueListTriangle); 
-	}
-//
-												}//while loop 
-
-/////////////////////////////////////// weight the all 6 image 
-
-	GzIntensity tmpr[6],tmpg[6],tmpb[6],tmpa[6];
-	GzDepth tmpz[6];
-	GzIntensity antiR,antiG,antiB;	
-		int x,y;
-		
-		for(y=0;y<m_nHeight;y++)
-		{
-			for(x=0;x<m_nWidth;x++)
-			{
-			GzGetDisplay(m_pSampleDisplay[0],x,y,&tmpr[0],&tmpg[0],&tmpb[0],&tmpa[0],&tmpz[0]);
-			GzGetDisplay(m_pSampleDisplay[1],x,y,&tmpr[1],&tmpg[1],&tmpb[1],&tmpa[1],&tmpz[1]);
-			GzGetDisplay(m_pSampleDisplay[2],x,y,&tmpr[2],&tmpg[2],&tmpb[2],&tmpa[2],&tmpz[2]);
-			GzGetDisplay(m_pSampleDisplay[3],x,y,&tmpr[3],&tmpg[3],&tmpb[3],&tmpa[3],&tmpz[3]);
-			GzGetDisplay(m_pSampleDisplay[4],x,y,&tmpr[4],&tmpg[4],&tmpb[4],&tmpa[4],&tmpz[4]);
-			GzGetDisplay(m_pSampleDisplay[5],x,y,&tmpr[5],&tmpg[5],&tmpb[5],&tmpa[5],&tmpz[5]);
-
-			antiR=tmpr[0]*AAFilter[0][2]+tmpr[1]*AAFilter[1][2]+tmpr[2]*AAFilter[2][2]+tmpr[3]*AAFilter[3][2]+tmpr[4]*AAFilter[4][2]+tmpr[5]*AAFilter[5][2];
-			antiG=tmpg[0]*AAFilter[0][2]+tmpg[1]*AAFilter[1][2]+tmpg[2]*AAFilter[2][2]+tmpg[3]*AAFilter[3][2]+tmpg[4]*AAFilter[4][2]+tmpg[5]*AAFilter[5][2];
-			antiB=tmpb[0]*AAFilter[0][2]+tmpb[1]*AAFilter[1][2]+tmpb[2]*AAFilter[2][2]+tmpb[3]*AAFilter[3][2]+tmpb[4]*AAFilter[4][2]+tmpb[5]*AAFilter[5][2];
-
-	//		GzPutDisplay(m_pDisplay,x,y,antiR,antiG,antiB,tmpa[0],tmpz[0]);
-			}
-
-		}
-
+					
 		// call radiosity equation several times
 		int nTimes = 0;
 		while(nTimes++ != 4)
@@ -674,7 +513,7 @@ for (int i = 0; i < wallList.size(); i++){
 			valueListTriangle[0] = (GzPointer)vertexList; 
 			//valueListTriangle[1] = (GzPointer)normalList; 
 			//valueListTriangle[2] = (GzPointer)uvList; 
-			GzPutTriangle(m_pRender, 3, nameListTriangle, valueListTriangle); 
+			GzPutTriangle(m_pRender, 1, nameListTriangle, valueListTriangle); 
 
 
 			// tri 2
@@ -691,7 +530,7 @@ for (int i = 0; i < wallList.size(); i++){
 			vertexList[1][2] = patcheList.at(n).position[1].pos[2];
 
 			valueListTriangle[0] = (GzPointer)vertexList; 
-			GzPutTriangle(m_pRender, 3, nameListTriangle, valueListTriangle); 
+			GzPutTriangle(m_pRender, 1, nameListTriangle, valueListTriangle); 
 
 			n++;
 		}
@@ -728,11 +567,7 @@ int Application5::Clean()
 	status |= GzFreeRender(m_pRender); 
 	status |= GzFreeDisplay(m_pDisplay);
 
-	for(i=0;i<AAKERNEL_SIZE;i++)
-	{
-	status |= GzFreeRender(m_pSampleRender[i]); 
-	status |= GzFreeDisplay(m_pSampleDisplay[i]);
-	}
+
 	
 	if (status) 
 		return(GZ_FAILURE); 

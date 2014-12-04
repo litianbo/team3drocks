@@ -115,6 +115,7 @@ bool inPatch(Plane patch, Position3 point)
 		x1 = patch.position[top].pos[0] - (patch.position[top].pos[0] - patch.position[bottom].pos[0]) / (patch.position[top].pos[2] - patch.position[bottom].pos[2])
 			*(patch.position[top].pos[2] - patch.position[v[1]].pos[2]);
 
+		v0 = top;
 		if ((x0 - patch.position[v[0]].pos[0])*(x1 - patch.position[v[1]].pos[0]) < 0)
 		{
 			v0 = top;
@@ -177,6 +178,7 @@ bool inPatch(Plane patch, Position3 point)
 		x1 = patch.position[top].pos[0] - (patch.position[top].pos[0] - patch.position[bottom].pos[0]) / (patch.position[top].pos[1] - patch.position[bottom].pos[1])
 			*(patch.position[top].pos[1] - patch.position[v[1]].pos[1]);
 
+		v0 = top;
 		if ((x0 - patch.position[v[0]].pos[0])*(x1 - patch.position[v[1]].pos[0]) < 0)
 		{
 			v0 = top;
