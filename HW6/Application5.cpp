@@ -446,17 +446,19 @@ for(i=0;i<myOBJ.getNumOfFaces();i=i+2)
 		p.lightSource[0] = 0.3;
 		p.lightSource[1] = 0.3;
 		p.lightSource[2] = 0.3;
+		p.radiosityValue[0] = 0.3;
+		p.radiosityValue[1] = 0.3;
+		p.radiosityValue[2] = 0.3;
 	}	
 	else
 	{	
 		p.lightSource[0] = 0;
 		p.lightSource[1] = 0;
 		p.lightSource[2] = 0;
+		p.radiosityValue[0] = 0;
+		p.radiosityValue[1] = 0;
+		p.radiosityValue[2] = 0;
 	}	
-
-	p.radiosityValue[0] = 0;
-	p.radiosityValue[1] = 0;
-	p.radiosityValue[2] = 0;
 
 	/* add to patches list */
 	patcheList.push_back(p);
