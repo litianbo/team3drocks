@@ -90,7 +90,8 @@ bool inPatch(Plane patch, Position3 point)
 	d_v0b = d(patch.position[bottom], patch.position[v[0]], 0, 1);
 	d_v1b = d(patch.position[bottom], patch.position[v[1]], 0, 1);
 
-	if ((d_bt == d_v0b && d_bt == d_v1b) || (top == bottom)) // The projection on x-y plane is a line
+/* x-z plane */
+	if ((d_bt == d_v0b && d_bt == d_v1b) || (top == bottom) || (patch.position[0].pos[0]==patch.position[1].pos[0] && patch.position[0].pos[0]==patch.position[2].pos[0])) // The projection on x-y plane is a line
 	{
 		/* Project the polygon onto x-z plane */
 
@@ -111,6 +112,77 @@ bool inPatch(Plane patch, Position3 point)
 				v[idx] = i;
 				idx++;
 			}
+		}
+
+		d_bt = d(patch.position[top], patch.position[bottom], 0, 2);
+		d_v0b = d(patch.position[bottom], patch.position[v[0]], 0, 2);
+		d_v1b = d(patch.position[bottom], patch.position[v[1]], 0, 2);
+
+/* y-z plane */
+		if ((d_bt == d_v0b && d_bt == d_v1b) || (top == bottom) || (patch.position[0].pos[0] == patch.position[1].pos[0] && patch.position[0].pos[0] == patch.position[2].pos[0])) // The projection on x-z plane is also a line
+		{
+
+			/* Decide right/left of the two vertices */
+			float x0, x1;
+			x0 = patch.position[top].pos[1] - (patch.position[top].pos[1] - patch.position[bottom].pos[1]) / (patch.position[top].pos[2] - patch.position[bottom].pos[2])
+				*(patch.position[top].pos[2] - patch.position[v[1]].pos[2]);
+			x1 = patch.position[top].pos[1] - (patch.position[top].pos[1] - patch.position[bottom].pos[1]) / (patch.position[top].pos[2] - patch.position[bottom].pos[2])
+				*(patch.position[top].pos[2] - patch.position[v[1]].pos[2]);
+
+			v0 = top;
+			if ((x0 - patch.position[v[0]].pos[1])*(x1 - patch.position[v[1]].pos[1]) < 0)
+			{
+				v0 = top;
+				v2 = bottom;
+				if (patch.position[v[0]].pos[1] > x0)
+				{
+					v1 = v[0];
+					v3 = v[1];
+				}
+				else
+				{
+					v1 = v[1];
+					v3 = v[0];
+				}
+			}
+			else if (patch.position[v[0]].pos[1] > x0 && patch.position[v[1]].pos[1] > x1)
+			{
+				v0 = top;
+				v3 = bottom;
+				if (patch.position[v[0]].pos[2] > patch.position[v[1]].pos[2])
+				{
+					v1 = v[0];
+					v2 = v[1];
+				}
+				else
+				{
+					v1 = v[1];
+					v2 = v[0];
+				}
+			}
+			else if (patch.position[v[0]].pos[1] < x0 && patch.position[v[1]].pos[1] < x1)
+			{
+				v0 = top;
+				v1 = bottom;
+				if (patch.position[v[0]].pos[2] > patch.position[v[1]].pos[2])
+				{
+					v3 = v[0];
+					v2 = v[1];
+				}
+				else
+				{
+					v3 = v[1];
+					v2 = v[0];
+				}
+			}
+
+			if (LEE(patch.position[v1], patch.position[v0], point, 1, 2) >= 0 &&
+				LEE(patch.position[v2], patch.position[v1], point, 1, 2) >= 0 &&
+				LEE(patch.position[v3], patch.position[v2], point, 1, 2) >= 0 &&
+				LEE(patch.position[v0], patch.position[v3], point, 1, 2) >= 0)
+				return true;
+
+			else return false;
 		}
 
 		/* Decide right/left of the two vertices */
@@ -167,10 +239,10 @@ bool inPatch(Plane patch, Position3 point)
 			}
 		}
 
-		if (LEE(patch.position[v1], patch.position[v0], point, 0, 2) > 0 &&
-			LEE(patch.position[v2], patch.position[v1], point, 0, 2) > 0 &&
-			LEE(patch.position[v3], patch.position[v2], point, 0, 2) > 0 &&
-			LEE(patch.position[v0], patch.position[v3], point, 0, 2) > 0)
+		if (LEE(patch.position[v1], patch.position[v0], point, 0, 2) >= 0 &&
+			LEE(patch.position[v2], patch.position[v1], point, 0, 2) >= 0 &&
+			LEE(patch.position[v3], patch.position[v2], point, 0, 2) >= 0 &&
+			LEE(patch.position[v0], patch.position[v3], point, 0, 2) >= 0)
 			return true;
 
 	}
