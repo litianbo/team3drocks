@@ -445,14 +445,14 @@ for(i=0;i<myOBJ.getNumOfFaces();i=i+2)
 	p.setPlane(wallPosition);
 	
 	// give light source to a face
-	if(i==0)
+	if(i==0 || i==2)
 	{	
-		p.lightSource[0] = 0.3;
+		p.lightSource[0] = 0.5;
 		p.lightSource[1] = 0.3;
-		p.lightSource[2] = 0.3;
-		p.radiosityValue[0] = 0.3;
+		p.lightSource[2] = 0.7;
+		p.radiosityValue[0] = 0.5;
 		p.radiosityValue[1] = 0.3;
-		p.radiosityValue[2] = 0.3;
+		p.radiosityValue[2] = 0.7;
 	}	
 	else
 	{	
